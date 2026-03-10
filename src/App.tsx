@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 /* ─── GLOBAL STYLES ─────────────────────────────────────────────── */
 const globalCSS = `
@@ -215,21 +215,74 @@ function Navbar() {
    HERO
 ═══════════════════════════════════════════════════════════════════ */
 function Hero() {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [videoReady, setVideoReady] = useState(false)
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    // Só toca quando tiver dados suficientes para reprodução suave
+    const handleCanPlay = () => {
+      setVideoReady(true)
+      video.play().catch(() => {
+        // Autoplay bloqueado pelo browser — ignora silenciosamente
+      })
+    }
+
+    // No mobile, desativa a faixa de áudio explicitamente (além de muted)
+    video.muted = true
+
+    video.addEventListener('canplaythrough', handleCanPlay)
+    return () => video.removeEventListener('canplaythrough', handleCanPlay)
+  }, [])
+
   return (
     <section style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden' }}>
-      <video autoPlay muted loop playsInline style={{
-        position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover',
-      }} src="https://assets.mixkit.co/videos/preview/49726/49726-small.mp4" />
 
-      <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.50)' }} />
+      {/* Placeholder escuro enquanto o vídeo carrega */}
       <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0, height: 300,
-        background: 'linear-gradient(to top, #2c2c2c 0%, transparent 100%)',
+        position: 'absolute', inset: 0,
+        background: '#1a1a1a',
+        transition: 'opacity 1s ease',
+        opacity: videoReady ? 0 : 1,
+        zIndex: 1,
         pointerEvents: 'none',
       }} />
 
+      {/* Vídeo local em public/videos/ */}
+      <video
+        ref={videoRef}
+        muted
+        loop
+        playsInline
+        preload="auto"
+        style={{
+          position: 'absolute', inset: 0,
+          width: '100%', height: '100%',
+          objectFit: 'cover',
+          objectPosition: 'center center',
+          transition: 'opacity 1.2s ease',
+          opacity: videoReady ? 1 : 0,
+        }}
+      >
+        {/* Coloque seu arquivo em public/videos/ com este nome */}
+        <source src="/videos/black_hole.mp4" type="video/mp4" />
+      </video>
+
+      {/* Overlay 50% preto */}
+      <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.50)', zIndex: 2 }} />
+
+      {/* Gradiente na base */}
+      <div style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0, height: 300,
+        background: 'linear-gradient(to top, #2c2c2c 0%, transparent 100%)',
+        zIndex: 3, pointerEvents: 'none',
+      }} />
+
+      {/* Conteúdo */}
       <div className="hero-pad" style={{
-        position: 'relative', zIndex: 2,
+        position: 'relative', zIndex: 4,
         display: 'flex', flexDirection: 'column', alignItems: 'center',
         textAlign: 'center', paddingTop: 280, paddingLeft: 24, paddingRight: 24,
       }}>
