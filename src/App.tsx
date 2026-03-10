@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 
 /* ─── GLOBAL STYLES ─────────────────────────────────────────────── */
 const globalCSS = `
@@ -845,6 +846,7 @@ export default function App() {
         <Testimonials />
       </main>
       <Footer />
+      <SpeedInsights />
     </>
   )
 }
