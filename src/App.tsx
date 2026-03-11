@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 
-/* ─── GLOBAL STYLES ─────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════
+   GLOBAL STYLES
+═══════════════════════════════════════════════════════════════════ */
 const globalCSS = `
   @import url('https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap');
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
@@ -9,7 +11,7 @@ const globalCSS = `
     0%   { transform: translateX(0); }
     100% { transform: translateX(-50%); }
   }
-  .marquee-track { animation: marquee 32s linear infinite; }
+  .marquee-track { animation: marquee 36s linear infinite; }
   .marquee-track:hover { animation-play-state: paused; }
 
   .reveal {
@@ -23,7 +25,9 @@ const globalCSS = `
   .reveal-delay-2 { transition-delay: 0.22s; }
   .reveal-delay-3 { transition-delay: 0.34s; }
   .reveal-delay-4 { transition-delay: 0.46s; }
+  .reveal-delay-5 { transition-delay: 0.58s; }
 
+  /* ── Glass card ── */
   .glass-card {
     background: linear-gradient(180deg, rgba(245,245,245,0.035) 0%, rgba(245,245,245,0.01) 100%);
     border: 1px solid rgba(245,245,245,0.07);
@@ -34,8 +38,7 @@ const globalCSS = `
     position: relative;
     overflow: hidden;
     transition: transform 0.38s cubic-bezier(0.22,1,0.36,1),
-                border-color 0.38s ease,
-                box-shadow 0.38s ease;
+                border-color 0.38s ease, box-shadow 0.38s ease;
   }
   .glass-card::before {
     content: '';
@@ -54,6 +57,7 @@ const globalCSS = `
                 0 0 48px rgba(245,245,245,0.045);
   }
 
+  /* ── Buttons ── */
   .btn-primary {
     background: #f5f5f5; color: #2c2c2c; border: none;
     border-radius: 9999px; font-family: 'Inter', sans-serif; font-weight: 500;
@@ -97,6 +101,7 @@ const globalCSS = `
     box-shadow: 0 0 30px rgba(245,245,245,0.10), 0 8px 28px rgba(0,0,0,0.28);
   }
 
+  /* ── Gradient text ── */
   .gradient-text {
     background: linear-gradient(144.5deg, #f5f5f5 28%, rgba(245,245,245,0.12) 115%);
     -webkit-background-clip: text;
@@ -104,6 +109,7 @@ const globalCSS = `
     background-clip: text;
   }
 
+  /* ── Chess grid pattern ── */
   .chess-pattern {
     background-image:
       linear-gradient(rgba(245,245,245,0.03) 1px, transparent 1px),
@@ -113,12 +119,31 @@ const globalCSS = `
     mask-image: radial-gradient(ellipse 85% 65% at 50% 50%, black 35%, transparent 100%);
   }
 
+  /* ── Nav link ── */
   .nav-link {
-    color: rgba(245,245,245,0.75); font-size: 14px; font-weight: 500;
+    color: rgba(245,245,245,0.72); font-size: 14px; font-weight: 500;
     text-decoration: none; font-family: 'Inter', sans-serif;
     transition: color 0.2s ease; cursor: pointer;
   }
   .nav-link:hover { color: #f5f5f5; }
+
+  /* ── Comparison table ── */
+  .compare-table { width: 100%; border-collapse: collapse; }
+  .compare-table th, .compare-table td {
+    padding: 14px 20px; text-align: left; font-size: 14px;
+    border-bottom: 1px solid rgba(245,245,245,0.05);
+    font-family: 'Inter', sans-serif;
+  }
+  .compare-table th {
+    font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: rgba(245,245,245,0.38);
+    padding-bottom: 16px;
+  }
+  .compare-table td:first-child { color: rgba(245,245,245,0.50); font-weight: 500; }
+  .compare-table td:not(:first-child) { color: rgba(245,245,245,0.72); }
+  .compare-table td.highlight { color: #f5f5f5; font-weight: 500; }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table tr:hover td { background: rgba(245,245,245,0.02); }
 
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: #2c2c2c; }
@@ -132,30 +157,46 @@ const globalCSS = `
   .traffic-dot { width: 12px; height: 12px; border-radius: 9999px; }
 
   @media (max-width: 768px) {
-    .nav-links       { display: none !important; }
-    .hero-heading    { font-size: 34px !important; }
-    .hero-ctas       { flex-direction: column !important; align-items: center !important; }
-    .bento-grid      { grid-template-columns: 1fr !important; }
-    .bento-span2     { grid-column: span 1 !important; }
-    .metrics-grid    { flex-direction: column !important; gap: 32px !important; }
-    .metrics-divider { display: none !important; }
-    .footer-inner    { flex-direction: column !important; gap: 24px !important; align-items: center !important; text-align: center !important; }
-    .hero-pad        { padding-top: 200px !important; }
-    .testi-grid      { grid-template-columns: 1fr !important; }
-    .nav-pad         { padding-left: 24px !important; padding-right: 24px !important; }
-    .section-pad     { padding-left: 24px !important; padding-right: 24px !important; }
+    .nav-links        { display: none !important; }
+    .hero-heading     { font-size: 34px !important; }
+    .hero-ctas        { flex-direction: column !important; align-items: center !important; }
+    .problem-grid     { grid-template-columns: 1fr !important; }
+    .phases-grid      { grid-template-columns: 1fr !important; }
+    .pillars-grid     { grid-template-columns: 1fr !important; }
+    .testi-grid       { grid-template-columns: 1fr !important; }
+    .metrics-grid     { flex-direction: column !important; gap: 32px !important; }
+    .metrics-divider  { display: none !important; }
+    .footer-inner     { flex-direction: column !important; gap: 24px !important; align-items: center !important; text-align: center !important; }
+    .hero-pad         { padding-top: 200px !important; }
+    .nav-pad          { padding-left: 24px !important; padding-right: 24px !important; }
+    .section-pad      { padding-left: 24px !important; padding-right: 24px !important; }
+    .compare-table th, .compare-table td { padding: 10px 12px; font-size: 12px; }
+    .hide-mobile      { display: none !important; }
   }
 `
 
-/* ─── BISHOP ICON ───────────────────────────────────────────────── */
+/* ─── ICONS ─────────────────────────────────────────────────────── */
 const BishopIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-    style={{ opacity: 0.16, flexShrink: 0 }}
-    xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M12 3C10.9 3 10 3.9 10 5C10 5.7 10.4 6.3 11 6.7L8.5 12H7C6.4 12 6 12.4 6 13V14H7.5L6 19H5V21H19V21H18L16.5 14H18V13C18 12.4 17.6 12 17 12H15.5L13 6.7C13.6 6.3 14 5.7 14 5C14 3.9 13.1 3 12 3Z"
-      fill="rgba(245,245,245,1)"
-    />
+    style={{ opacity: 0.16, flexShrink: 0 }} xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 3C10.9 3 10 3.9 10 5C10 5.7 10.4 6.3 11 6.7L8.5 12H7C6.4 12 6 12.4 6 13V14H7.5L6 19H5V21H19V21H18L16.5 14H18V13C18 12.4 17.6 12 17 12H15.5L13 6.7C13.6 6.3 14 5.7 14 5C14 3.9 13.1 3 12 3Z"
+      fill="rgba(245,245,245,1)" />
+  </svg>
+)
+
+const CheckIcon = () => (
+  <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"
+    style={{ flexShrink: 0, marginTop: 2 }}>
+    <path d="M2 7.5L6 11.5L13 3.5" stroke="rgba(245,245,245,0.7)" strokeWidth="1.5"
+      strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+)
+
+const CrossIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg"
+    style={{ flexShrink: 0, marginTop: 2 }}>
+    <path d="M2 2L11 11M11 2L2 11" stroke="rgba(245,245,245,0.25)" strokeWidth="1.5"
+      strokeLinecap="round"/>
   </svg>
 )
 
@@ -164,15 +205,31 @@ function useReveal() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add('visible') }),
-      { threshold: 0.10, rootMargin: '0px 0px -32px 0px' }
+      { threshold: 0.08, rootMargin: '0px 0px -24px 0px' }
     )
     document.querySelectorAll('.reveal').forEach((el) => observer.observe(el))
     return () => observer.disconnect()
   }, [])
 }
 
+/* ─── SECTION LABEL ─────────────────────────────────────────────── */
+function SectionLabel({ children }: { children: string }) {
+  return (
+    <div style={{
+      display: 'inline-flex', alignItems: 'center',
+      background: 'rgba(245,245,245,0.06)', border: '1px solid rgba(245,245,245,0.12)',
+      borderRadius: 9999, padding: '5px 16px', marginBottom: 24,
+    }}>
+      <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.16em',
+        textTransform: 'uppercase', color: 'rgba(245,245,245,0.60)' }}>
+        {children}
+      </span>
+    </div>
+  )
+}
+
 /* ═══════════════════════════════════════════════════════════════════
-   NAVBAR
+   1. NAVBAR
 ═══════════════════════════════════════════════════════════════════ */
 function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -186,33 +243,34 @@ function Navbar() {
     <nav className="nav-pad" style={{
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      padding: '20px 120px',
+      padding: '20px 80px',
       transition: 'background 0.45s ease, backdrop-filter 0.45s ease, border-color 0.45s ease',
-      background: scrolled ? 'rgba(44,44,44,0.82)' : 'transparent',
+      background: scrolled ? 'rgba(44,44,44,0.85)' : 'transparent',
       backdropFilter: scrolled ? 'blur(24px) saturate(1.5)' : 'none',
       WebkitBackdropFilter: scrolled ? 'blur(24px) saturate(1.5)' : 'none',
       borderBottom: scrolled ? '1px solid rgba(245,245,245,0.07)' : '1px solid transparent',
     }}>
       <span style={{
         fontFamily: "'General Sans', sans-serif", fontWeight: 600,
-        fontSize: 15, letterSpacing: '0.18em', color: '#f5f5f5', width: 187, userSelect: 'none',
+        fontSize: 15, letterSpacing: '0.18em', color: '#f5f5f5', userSelect: 'none',
+        flexShrink: 0,
       }}>CHECKMATE</span>
 
-      <div className="nav-links" style={{ display: 'flex', gap: 32 }}>
-        {['Diagnóstico', 'Como Funciona', 'Resultados', 'Para Você'].map((l) => (
+      <div className="nav-links" style={{ display: 'flex', gap: 28 }}>
+        {['O Problema', 'Como Entramos', 'O Que Construímos', 'Resultados'].map((l) => (
           <a key={l} className="nav-link">{l}</a>
         ))}
       </div>
 
-      <button className="btn-glass" style={{ fontSize: 13, padding: '10px 20px' }}>
-        Agendar Diagnóstico Gratuito
+      <button className="btn-glass" style={{ fontSize: 13, padding: '10px 20px', flexShrink: 0 }}>
+        Agendar Diagnóstico
       </button>
     </nav>
   )
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   HERO
+   2. HERO
 ═══════════════════════════════════════════════════════════════════ */
 function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -221,98 +279,73 @@ function Hero() {
   useEffect(() => {
     const video = videoRef.current
     if (!video) return
-
-    // Só toca quando tiver dados suficientes para reprodução suave
+    video.muted = true
     const handleCanPlay = () => {
       setVideoReady(true)
-      video.play().catch(() => {
-        // Autoplay bloqueado pelo browser — ignora silenciosamente
-      })
+      video.play().catch(() => {})
     }
-
-    // No mobile, desativa a faixa de áudio explicitamente (além de muted)
-    video.muted = true
-
     video.addEventListener('canplaythrough', handleCanPlay)
     return () => video.removeEventListener('canplaythrough', handleCanPlay)
   }, [])
 
   return (
     <section style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden' }}>
-
-      {/* Placeholder escuro enquanto o vídeo carrega */}
+      {/* Placeholder escuro */}
       <div style={{
-        position: 'absolute', inset: 0,
-        background: '#1a1a1a',
-        transition: 'opacity 1s ease',
-        opacity: videoReady ? 0 : 1,
-        zIndex: 1,
-        pointerEvents: 'none',
+        position: 'absolute', inset: 0, background: '#1a1a1a', zIndex: 1,
+        transition: 'opacity 1s ease', opacity: videoReady ? 0 : 1, pointerEvents: 'none',
       }} />
 
-      {/* Vídeo local em public/videos/ */}
-      <video
-        ref={videoRef}
-        muted
-        loop
-        playsInline
-        preload="auto"
-        style={{
-          position: 'absolute', inset: 0,
-          width: '100%', height: '100%',
-          objectFit: 'cover',
-          objectPosition: 'center center',
-          transition: 'opacity 1.2s ease',
-          opacity: videoReady ? 1 : 0,
-        }}
-      >
-        {/* Coloque seu arquivo em public/videos/ com este nome */}
-        <source src="/videos/black_hole.mp4" type="video/mp4" />
+      {/* Vídeo local */}
+      <video ref={videoRef} muted loop playsInline preload="auto" style={{
+        position: 'absolute', inset: 0, width: '100%', height: '100%',
+        objectFit: 'cover', objectPosition: 'center center',
+        transition: 'opacity 1.2s ease', opacity: videoReady ? 1 : 0,
+      }}>
+        <source src="/videos/hero-bg.mp4" type="video/mp4" />
       </video>
 
-      {/* Overlay 50% preto */}
       <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.50)', zIndex: 2 }} />
-
-      {/* Gradiente na base */}
       <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0, height: 300,
+        position: 'absolute', bottom: 0, left: 0, right: 0, height: 320,
         background: 'linear-gradient(to top, #2c2c2c 0%, transparent 100%)',
         zIndex: 3, pointerEvents: 'none',
       }} />
 
-      {/* Conteúdo */}
       <div className="hero-pad" style={{
         position: 'relative', zIndex: 4,
         display: 'flex', flexDirection: 'column', alignItems: 'center',
         textAlign: 'center', paddingTop: 280, paddingLeft: 24, paddingRight: 24,
       }}>
+        {/* Badge */}
         <div style={{
           display: 'inline-flex', alignItems: 'center', gap: 8,
           background: 'rgba(245,245,245,0.10)', border: '1px solid rgba(245,245,245,0.22)',
           borderRadius: 20, padding: '7px 16px', marginBottom: 36,
           backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
         }}>
-          <span style={{
-            width: 6, height: 6, borderRadius: '50%', background: '#f5f5f5', flexShrink: 0,
-            boxShadow: '0 0 8px rgba(245,245,245,0.65)',
-          }} />
+          <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#f5f5f5', flexShrink: 0,
+            boxShadow: '0 0 8px rgba(245,245,245,0.65)' }} />
           <span style={{ fontSize: 13, fontWeight: 500, color: '#f5f5f5' }}>Diagnóstico gratuito disponível</span>
         </div>
 
+        {/* Heading */}
         <h1 className="hero-heading gradient-text" style={{
           fontFamily: "'General Sans', sans-serif", fontWeight: 500,
           fontSize: 56, lineHeight: 1.28, letterSpacing: '-0.022em',
-          maxWidth: 680, marginBottom: 24,
+          maxWidth: 680, marginBottom: 28,
         }}>
-          Seu negócio não está quebrado. Só está em xeque.
+          Seu negócio não está quebrado.{' '}
+          <br />
+          Só está em xeque.
         </h1>
 
+        {/* Subtitle */}
         <p style={{
-          fontSize: 15, fontWeight: 400, color: 'rgba(245,245,245,0.70)',
-          maxWidth: 560, lineHeight: 1.75, marginBottom: 44,
+          fontSize: 16, fontWeight: 400, color: 'rgba(245,245,245,0.68)',
+          maxWidth: 600, lineHeight: 1.78, marginBottom: 48,
         }}>
-          Nós fazemos o diagnóstico estratégico completo e executamos o plano ao seu lado.
-          Transformamos estagnação em crescimento previsível com ROI real — sem queimar mais dinheiro.
+          A maioria das empresas contrata especialistas. Nós entramos no seu negócio, aprendemos seus processos, conhecemos sua equipe — e executamos o plano do início ao fim. Sem relatório bonito. Sem reunião semanal pra mostrar número. Crescimento real ou não existe parceria.
         </p>
 
         <div className="hero-ctas" style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
@@ -329,18 +362,17 @@ function Hero() {
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   TICKER
+   3. TICKER
 ═══════════════════════════════════════════════════════════════════ */
 function Ticker() {
   const items = [
-    { text: 'ROI 5×',                          w: 600, o: 1.0  },
-    { text: '+340% faturamento',                w: 500, o: 0.70 },
+    { text: 'Lucro líquido real',              w: 600, o: 1.0  },
+    { text: 'Marketing all-in-one',             w: 500, o: 0.70 },
     { text: 'Atendimento destravado',           w: 400, o: 0.50 },
-    { text: 'Lucro previsível',                 w: 600, o: 0.85 },
-    { text: '60% menos tempo operacional',      w: 500, o: 0.65 },
-    { text: 'Clientes recorrentes',             w: 400, o: 0.55 },
-    { text: 'Operação autônoma',                w: 600, o: 0.80 },
-    { text: 'Estratégia que funciona',          w: 500, o: 0.70 },
+    { text: 'Operação autônoma',                w: 600, o: 0.85 },
+    { text: 'Sem pacote genérico',              w: 500, o: 0.65 },
+    { text: 'Parceiro que executa',             w: 600, o: 0.90 },
+    { text: 'Resultado ou não existe parceria', w: 500, o: 0.70 },
   ]
   const doubled = [...items, ...items]
 
@@ -358,10 +390,10 @@ function Ticker() {
         {doubled.map((item, i) => (
           <span key={i} style={{
             fontFamily: "'General Sans', sans-serif", fontWeight: item.w, fontSize: 14,
-            color: `rgba(245,245,245,${item.o})`, marginRight: 52, letterSpacing: '0.01em',
+            color: `rgba(245,245,245,${item.o})`, marginRight: 56, letterSpacing: '0.01em',
           }}>
             {item.text}
-            <span style={{ marginLeft: 52, opacity: 0.22, fontWeight: 300 }}>•</span>
+            <span style={{ marginLeft: 56, opacity: 0.20, fontWeight: 300 }}>•</span>
           </span>
         ))}
       </div>
@@ -370,142 +402,83 @@ function Ticker() {
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   FEATURES (BENTO)
+   4. O PROBLEMA
 ═══════════════════════════════════════════════════════════════════ */
-interface BentoCardProps {
-  children: React.ReactNode
-  style?: React.CSSProperties
-}
+function OProblema() {
+  const tried = [
+    {
+      what: 'Gestor de tráfego',
+      why: 'Só enxerga o anúncio — não o que acontece depois do clique.',
+    },
+    {
+      what: 'Agência especializada',
+      why: 'Entrega o serviço dela, não o crescimento do seu negócio.',
+    },
+    {
+      what: 'Consultoria tradicional',
+      why: 'Aponta o caminho e some. Você continua sem executar.',
+    },
+  ]
 
-function BentoCard({ children, style = {} }: BentoCardProps) {
-  return (
-    <div className="glass-card" style={{ padding: 32, height: '100%', ...style }}>
-      {children}
-    </div>
-  )
-}
-
-function Features() {
   return (
     <section className="chess-pattern section-pad" style={{ padding: '120px 80px', position: 'relative' }}>
+      {/* Ambient */}
       <div style={{
-        position: 'absolute', top: '50%', left: '50%',
-        transform: 'translate(-50%,-50%)',
-        width: 900, height: 900,
-        background: 'rgba(245,245,245,0.018)',
-        borderRadius: '50%', filter: 'blur(140px)', pointerEvents: 'none',
+        position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%,-50%)',
+        width: 800, height: 600, background: 'rgba(245,245,245,0.018)',
+        borderRadius: '50%', filter: 'blur(130px)', pointerEvents: 'none',
       }} />
 
-      <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative' }}>
-        <div className="reveal" style={{ textAlign: 'center', marginBottom: 64 }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative' }}>
+        {/* Header */}
+        <div className="reveal" style={{ maxWidth: 680, marginBottom: 64 }}>
+          <SectionLabel>O Problema</SectionLabel>
           <h2 style={{
             fontFamily: "'General Sans', sans-serif", fontWeight: 500,
-            fontSize: 40, lineHeight: 1.25, letterSpacing: '-0.02em',
-            maxWidth: 620, margin: '0 auto 16px',
+            fontSize: 40, lineHeight: 1.22, letterSpacing: '-0.022em', marginBottom: 24,
           }}>
-            Nós destravamos exatamente o que está travando seu crescimento
+            Você não precisa de mais um especialista.{' '}
+            <span style={{ color: 'rgba(245,245,245,0.45)' }}>
+              Você precisa de alguém que enxergue o negócio inteiro.
+            </span>
           </h2>
-          <p style={{ fontSize: 15, color: 'rgba(245,245,245,0.56)', maxWidth: 460, margin: '0 auto' }}>
-            Diagnóstico real, execução real. Do problema à solução em semanas.
+          <p style={{ fontSize: 16, color: 'rgba(245,245,245,0.62)', lineHeight: 1.78, marginBottom: 20 }}>
+            Você já contratou gestor de tráfego. Já tentou agência. Já testou freelancer. Cada um resolveu uma peça — e o crescimento continuou travado.
+          </p>
+          <p style={{ fontSize: 16, color: 'rgba(245,245,245,0.50)', lineHeight: 1.78, marginBottom: 20 }}>
+            Não foi sua culpa. O mercado foi construído para te vender solução isolada.
+          </p>
+          <p style={{ fontSize: 16, color: 'rgba(245,245,245,0.50)', lineHeight: 1.78 }}>
+            O problema é que empresa não é um motor com uma peça quebrada. É um sistema. Quando o marketing não converte, talvez o problema seja o atendimento. Quando o atendimento está sobrecarregado, talvez o processo de vendas esteja mal estruturado. Tratar sintoma por sintoma é remar em círculos.
           </p>
         </div>
 
-        <div className="bento-grid" style={{
-          display: 'grid', gridTemplateColumns: 'repeat(3,1fr)',
-          gridTemplateRows: 'auto auto', gap: 16,
-        }}>
-          {/* Card 1 — large */}
-          <div className="bento-span2 reveal reveal-delay-1" style={{ gridColumn: 'span 2' }}>
-            <BentoCard>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <div style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.12em',
-                  color: 'rgba(245,245,245,0.30)', textTransform: 'uppercase', marginBottom: 20 }}>
-                  01 — Marketing
-                </div>
-                <BishopIcon />
+        {/* Contrast blocks */}
+        <div className="problem-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16, marginBottom: 48 }}>
+          {tried.map((item, i) => (
+            <div key={i} className={`glass-card reveal reveal-delay-${i + 1}`} style={{ padding: 28 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+                <CrossIcon />
+                <span style={{ fontSize: 13, fontWeight: 600, color: 'rgba(245,245,245,0.55)',
+                  letterSpacing: '0.01em' }}>{item.what}</span>
               </div>
-              <h3 style={{ fontFamily: "'General Sans',sans-serif", fontWeight: 500,
-                fontSize: 24, lineHeight: 1.3, marginBottom: 14, letterSpacing: '-0.01em' }}>
-                Marketing que gera lucro de verdade
-              </h3>
-              <p style={{ fontSize: 15, color: 'rgba(245,245,245,0.60)', lineHeight: 1.7 }}>
-                Nós paramos o sangramento de budget e construímos funis com ROI previsível.
-                Cada real investido com intenção e rastreabilidade real.
+              <p style={{ fontSize: 14, color: 'rgba(245,245,245,0.48)', lineHeight: 1.65 }}>
+                {item.why}
               </p>
-              <div style={{ marginTop: 32, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                {['ROI previsível', 'Funil otimizado', 'Zero desperdício'].map((tag) => (
-                  <span key={tag} style={{
-                    fontSize: 12, fontWeight: 500,
-                    background: 'rgba(245,245,245,0.05)', border: '1px solid rgba(245,245,245,0.09)',
-                    borderRadius: 9999, padding: '4px 12px', color: 'rgba(245,245,245,0.58)',
-                  }}>{tag}</span>
-                ))}
-              </div>
-            </BentoCard>
-          </div>
+            </div>
+          ))}
+        </div>
 
-          {/* Card 2 */}
-          <div className="reveal reveal-delay-2" style={{ display: 'flex' }}>
-            <BentoCard>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <div style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.12em',
-                  color: 'rgba(245,245,245,0.30)', textTransform: 'uppercase', marginBottom: 20 }}>
-                  02 — Atendimento
-                </div>
-                <BishopIcon />
-              </div>
-              <h3 style={{ fontFamily: "'General Sans',sans-serif", fontWeight: 500,
-                fontSize: 20, lineHeight: 1.35, marginBottom: 12, letterSpacing: '-0.01em' }}>
-                Atendimento que não trava mais
-              </h3>
-              <p style={{ fontSize: 14, color: 'rgba(245,245,245,0.60)', lineHeight: 1.7 }}>
-                Automação com IA que libera sua equipe para o que importa de verdade.
-              </p>
-            </BentoCard>
-          </div>
-
-          {/* Card 3 */}
-          <div className="reveal reveal-delay-3" style={{ display: 'flex' }}>
-            <BentoCard>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <div style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.12em',
-                  color: 'rgba(245,245,245,0.30)', textTransform: 'uppercase', marginBottom: 20 }}>
-                  03 — Processos
-                </div>
-                <BishopIcon />
-              </div>
-              <h3 style={{ fontFamily: "'General Sans',sans-serif", fontWeight: 500,
-                fontSize: 20, lineHeight: 1.35, marginBottom: 12, letterSpacing: '-0.01em' }}>
-                Processos que funcionam sozinhos
-              </h3>
-              <p style={{ fontSize: 14, color: 'rgba(245,245,245,0.60)', lineHeight: 1.7 }}>
-                Sistema completo de growth operando no piloto automático.
-              </p>
-            </BentoCard>
-          </div>
-
-          {/* Card 4 — large */}
-          <div className="bento-span2 reveal reveal-delay-4" style={{ gridColumn: 'span 2' }}>
-            <BentoCard style={{
-              background: 'linear-gradient(135deg, rgba(245,245,245,0.045) 0%, rgba(245,245,245,0.01) 100%)',
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <div style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.12em',
-                  color: 'rgba(245,245,245,0.30)', textTransform: 'uppercase', marginBottom: 20 }}>
-                  04 — Estratégia + Execução
-                </div>
-                <BishopIcon />
-              </div>
-              <h3 style={{ fontFamily: "'General Sans',sans-serif", fontWeight: 500,
-                fontSize: 24, lineHeight: 1.3, marginBottom: 14, letterSpacing: '-0.01em' }}>
-                Estratégia + execução real
-              </h3>
-              <p style={{ fontSize: 15, color: 'rgba(245,245,245,0.60)', lineHeight: 1.7, maxWidth: 540 }}>
-                Nós não só apontamos o caminho — nós caminhamos com você. Da análise ao plano à execução
-                semanal, somos parceiros na jornada, não apenas consultores de slide.
-              </p>
-            </BentoCard>
-          </div>
+        {/* CTA link */}
+        <div className="reveal" style={{ textAlign: 'center' }}>
+          <a style={{
+            fontSize: 15, color: 'rgba(245,245,245,0.72)', cursor: 'pointer',
+            fontWeight: 500, textDecoration: 'none',
+            borderBottom: '1px solid rgba(245,245,245,0.18)', paddingBottom: 2,
+            transition: 'color 0.2s',
+          }}>
+            É por isso que a Checkmate existe de um jeito diferente →
+          </a>
         </div>
       </div>
     </section>
@@ -513,51 +486,190 @@ function Features() {
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   METRICS
+   5. COMO A CHECKMATE ENTRA
 ═══════════════════════════════════════════════════════════════════ */
-function Metrics() {
-  const metrics = [
-    { number: '4.8×', label: 'ROI médio por cliente' },
-    { number: '60%',  label: 'Redução no tempo operacional' },
-    { number: '∞',    label: 'Crescimento previsível mês a mês' },
+function ComoEntramos() {
+  const phases = [
+    {
+      num: '01',
+      label: 'Diagnóstico Estratégico',
+      badge: 'gratuito',
+      body: 'Não é uma call de 30 minutos pra te convencer a contratar. É um diagnóstico real, feito por quem já destravou dezenas de negócios. Saímos da conversa com um mapa do que está travando seu crescimento — e com um caminho claro para o lucro.',
+    },
+    {
+      num: '02',
+      label: 'Plano de Implementação',
+      badge: null,
+      body: 'Um plano por escrito. Com o que será feito, quando, por quem e qual resultado esperado em cada etapa. Sem achismo. Sem vagueza. Você sabe exatamente no que está investindo antes de começar.',
+    },
+    {
+      num: '03',
+      label: 'Execução ao seu lado',
+      badge: null,
+      body: 'Aqui é onde somos diferentes. Nós não apontamos o caminho e te deixamos ir. Nós executamos junto. Tráfego pago. Email marketing. WhatsApp marketing. Landing pages. Automações com IA. Chatbot. Estratégia de conteúdo. Tudo sob um mesmo teto, semana a semana, construindo a máquina — não mostrando número bonito.',
+    },
+    {
+      num: '04',
+      label: 'Crescimento Previsível',
+      badge: null,
+      body: 'O objetivo final não é um bom mês. É um sistema que funciona sem depender de você apagando incêndio. Marketing que atrai. Atendimento que converte. Operação que escala. Lucro líquido real — não ROI de slide.',
+    },
   ]
+
   return (
-    <div style={{
-      backdropFilter: 'blur(24px) saturate(1.3)',
-      WebkitBackdropFilter: 'blur(24px) saturate(1.3)',
-      borderTop: '1px solid rgba(245,245,245,0.05)',
-      borderBottom: '1px solid rgba(245,245,245,0.05)',
-      padding: '64px 80px',
-      background: 'rgba(245,245,245,0.01)',
-    }}>
-      <div className="metrics-grid" style={{
-        display: 'flex', justifyContent: 'center', gap: 0, maxWidth: 1000, margin: '0 auto',
-      }}>
-        {metrics.map((m, i) => (
-          <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column',
-            alignItems: 'center', position: 'relative' }}>
-            {i > 0 && (
-              <div className="metrics-divider" style={{
-                position: 'absolute', left: 0, top: '8%', bottom: '8%',
-                width: 1, background: 'rgba(245,245,245,0.08)',
-              }} />
-            )}
-            <div className="reveal gradient-text" style={{
-              fontFamily: "'General Sans', sans-serif", fontWeight: 500,
-              fontSize: 56, lineHeight: 1, letterSpacing: '-0.03em', marginBottom: 14,
-            }}>{m.number}</div>
-            <div style={{ fontSize: 14, color: 'rgba(245,245,245,0.50)', textAlign: 'center', lineHeight: 1.5 }}>
-              {m.label}
+    <section className="section-pad" style={{ padding: '120px 80px', position: 'relative' }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+        {/* Header */}
+        <div className="reveal" style={{ maxWidth: 680, marginBottom: 72 }}>
+          <SectionLabel>Como Entramos</SectionLabel>
+          <h2 style={{
+            fontFamily: "'General Sans', sans-serif", fontWeight: 500,
+            fontSize: 40, lineHeight: 1.22, letterSpacing: '-0.022em', marginBottom: 20,
+          }}>
+            Não terceirizamos.{' '}
+            Não mandamos relatório.{' '}
+            <span style={{ color: 'rgba(245,245,245,0.45)' }}>Nós entramos.</span>
+          </h2>
+          <p style={{ fontSize: 16, color: 'rgba(245,245,245,0.58)', lineHeight: 1.75 }}>
+            Antes de qualquer estratégia, a gente aprende seu negócio de dentro. Seus processos. Sua equipe. Seus números reais. Onde o dinheiro está escapando.
+          </p>
+        </div>
+
+        {/* Phases */}
+        <div className="phases-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 16 }}>
+          {phases.map((phase, i) => (
+            <div key={i} className={`glass-card reveal reveal-delay-${i + 1}`} style={{ padding: 36 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
+                <span style={{
+                  fontFamily: "'General Sans', sans-serif", fontSize: 12, fontWeight: 600,
+                  color: 'rgba(245,245,245,0.28)', letterSpacing: '0.12em',
+                }}>
+                  FASE {phase.num}
+                </span>
+                {phase.badge && (
+                  <span style={{
+                    fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase',
+                    background: 'rgba(245,245,245,0.07)', border: '1px solid rgba(245,245,245,0.14)',
+                    borderRadius: 9999, padding: '4px 10px', color: 'rgba(245,245,245,0.60)',
+                  }}>{phase.badge}</span>
+                )}
+              </div>
+              <h3 style={{
+                fontFamily: "'General Sans', sans-serif", fontWeight: 500,
+                fontSize: 22, lineHeight: 1.3, letterSpacing: '-0.01em', marginBottom: 14,
+              }}>
+                {phase.label}
+              </h3>
+              <p style={{ fontSize: 14, color: 'rgba(245,245,245,0.60)', lineHeight: 1.72 }}>
+                {phase.body}
+              </p>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   )
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   DIAGNOSTIC WINDOW
+   6. O QUE CONSTRUÍMOS
+═══════════════════════════════════════════════════════════════════ */
+function OQueConstruimos() {
+  const pillars = [
+    {
+      num: '01',
+      title: 'Marketing que gera lucro de verdade',
+      body: 'Meta Ads com foco em lucro líquido real — não impressão, não clique, não ROI positivo que some quando você desconta o custo. Landing pages que convertem. Email marketing e WhatsApp marketing que nutrem e reativam clientes. Cada real investido com intenção e rastreabilidade.',
+      tags: ['Gestão de tráfego pago', 'Landing pages', 'Email marketing', 'WhatsApp marketing', 'Estratégia de conteúdo'],
+    },
+    {
+      num: '02',
+      title: 'Atendimento que não trava mais',
+      body: 'Seu atendimento não deve sugar energia da sua equipe. Deve converter. Automações com IA e chatbot estratégico que liberam seu time para o que importa — e garantem que nenhum cliente em potencial caia no vazio.',
+      tags: ['Chatbot com IA', 'Automações de atendimento', 'Fluxos de conversão', 'Integração com CRM'],
+    },
+    {
+      num: '03',
+      title: 'Operação que funciona sozinha',
+      body: 'Processos mapeados, otimizados e automatizados. A empresa que hoje depende de você para cada decisão vai passar a funcionar com mais autonomia — e você vai voltar a pensar no futuro, não no dia a dia.',
+      tags: ['Mapeamento de processos', 'Automações operacionais', 'Dashboards de resultado', 'Estrutura de crescimento'],
+    },
+  ]
+
+  return (
+    <section className="chess-pattern section-pad" style={{ padding: '120px 80px', position: 'relative' }}>
+      <div style={{
+        position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
+        width: 900, height: 700, background: 'rgba(245,245,245,0.016)',
+        borderRadius: '50%', filter: 'blur(140px)', pointerEvents: 'none',
+      }} />
+
+      <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative' }}>
+        {/* Header */}
+        <div className="reveal" style={{ textAlign: 'center', marginBottom: 72 }}>
+          <SectionLabel>O Que Construímos</SectionLabel>
+          <h2 style={{
+            fontFamily: "'General Sans', sans-serif", fontWeight: 500,
+            fontSize: 40, lineHeight: 1.22, letterSpacing: '-0.022em',
+            maxWidth: 620, margin: '0 auto 18px',
+          }}>
+            Tudo que seu negócio precisa para crescer.{' '}
+            <span style={{ color: 'rgba(245,245,245,0.45)' }}>Em um único parceiro.</span>
+          </h2>
+          <p style={{ fontSize: 15, color: 'rgba(245,245,245,0.52)', maxWidth: 520, margin: '0 auto', lineHeight: 1.72 }}>
+            Nada terceirizado. Nada fragmentado. Uma estratégia integrada, executada por quem conhece cada detalhe do seu negócio.
+          </p>
+        </div>
+
+        {/* Pillars */}
+        <div className="pillars-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16, marginBottom: 24 }}>
+          {pillars.map((p, i) => (
+            <div key={i} className={`glass-card reveal reveal-delay-${i + 1}`} style={{ padding: 32 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+                <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.12em',
+                  color: 'rgba(245,245,245,0.28)', textTransform: 'uppercase' }}>
+                  {p.num}
+                </span>
+                <BishopIcon />
+              </div>
+              <h3 style={{
+                fontFamily: "'General Sans', sans-serif", fontWeight: 500,
+                fontSize: 20, lineHeight: 1.3, letterSpacing: '-0.01em', marginBottom: 14,
+              }}>
+                {p.title}
+              </h3>
+              <p style={{ fontSize: 14, color: 'rgba(245,245,245,0.58)', lineHeight: 1.72, marginBottom: 24 }}>
+                {p.body}
+              </p>
+              <div style={{ paddingTop: 20, borderTop: '1px solid rgba(245,245,245,0.06)' }}>
+                <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.10em', textTransform: 'uppercase',
+                  color: 'rgba(245,245,245,0.28)', marginBottom: 12 }}>O que construímos</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {p.tags.map((tag) => (
+                    <div key={tag} style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+                      <CheckIcon />
+                      <span style={{ fontSize: 13, color: 'rgba(245,245,245,0.55)', lineHeight: 1.4 }}>{tag}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Honest disclaimer */}
+        <div className="reveal" style={{ textAlign: 'center' }}>
+          <p style={{ fontSize: 13, color: 'rgba(245,245,245,0.35)', fontStyle: 'italic', lineHeight: 1.65 }}>
+            Somos all-in-one dentro dos nossos limites de tempo e escopo. Priorizamos poucos clientes para entregarmos qualidade real — não quantidade.
+          </p>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   7. RESULTADOS — Diagnostic Window
 ═══════════════════════════════════════════════════════════════════ */
 function DiagnosticWindow() {
   return (
@@ -579,11 +691,10 @@ function DiagnosticWindow() {
         <div className="traffic-dot" style={{ background: '#27c93f' }} />
         <span style={{ fontFamily: "'Inter',sans-serif", fontSize: 12, fontWeight: 500,
           color: 'rgba(245,245,245,0.40)', marginLeft: 12, letterSpacing: '0.01em' }}>
-          Diagnóstico Inicial — Roberto S.A.
+          Diagnóstico Estratégico — Parceiro #12
         </span>
       </div>
 
-      {/* Body */}
       <div style={{ padding: 32 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 28 }}>
           <div>
@@ -653,53 +764,7 @@ function DiagnosticWindow() {
   )
 }
 
-/* ═══════════════════════════════════════════════════════════════════
-   APPROACH
-═══════════════════════════════════════════════════════════════════ */
-function Approach() {
-  return (
-    <section className="chess-pattern section-pad" style={{ padding: '120px 24px', position: 'relative' }}>
-      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-        <div className="reveal" style={{ textAlign: 'center', marginBottom: 64 }}>
-          <div style={{
-            display: 'inline-flex', alignItems: 'center',
-            background: 'rgba(245,245,245,0.06)', border: '1px solid rgba(245,245,245,0.13)',
-            borderRadius: 9999, padding: '5px 16px', marginBottom: 24,
-          }}>
-            <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.16em',
-              textTransform: 'uppercase', color: 'rgba(245,245,245,0.62)' }}>
-              Método Checkmate
-            </span>
-          </div>
-          <h2 style={{
-            fontFamily: "'General Sans',sans-serif", fontWeight: 500,
-            fontSize: 40, lineHeight: 1.25, letterSpacing: '-0.02em',
-            maxWidth: 600, margin: '0 auto 16px',
-          }}>
-            Do diagnóstico à execução em semanas, não meses.
-          </h2>
-          <p style={{ fontSize: 15, color: 'rgba(245,245,245,0.56)', maxWidth: 440,
-            margin: '0 auto 22px', lineHeight: 1.7 }}>
-            Nós não vendemos pacote. Nós viramos seu parceiro de crescimento.
-          </p>
-          <a style={{ fontSize: 14, color: 'rgba(245,245,245,0.68)', cursor: 'pointer',
-            fontWeight: 500, textDecoration: 'none',
-            borderBottom: '1px solid rgba(245,245,245,0.16)', paddingBottom: 2 }}>
-            Ver como funciona →
-          </a>
-        </div>
-        <div className="reveal reveal-delay-2">
-          <DiagnosticWindow />
-        </div>
-      </div>
-    </section>
-  )
-}
-
-/* ═══════════════════════════════════════════════════════════════════
-   TESTIMONIALS + BOTTOM CTA
-═══════════════════════════════════════════════════════════════════ */
-function Testimonials() {
+function Resultados() {
   const testimonials = [
     {
       quote: 'Eu já tinha uma gestão de tráfego, mas sentia que estava só queimando dinheiro com uma estratégia defasada. Após o diagnóstico, eles ajustaram o plano de anúncios e, pela primeira vez, vi um lucro real, com um retorno de 5 para cada 1 investido. Deixamos de ter um custo para ter uma máquina de vendas.',
@@ -716,76 +781,63 @@ function Testimonials() {
   ]
 
   return (
-    <section className="section-pad" style={{ padding: '120px 80px', maxWidth: 1280, margin: '0 auto' }}>
-      <div className="reveal" style={{ textAlign: 'center', marginBottom: 56 }}>
-        <h2 style={{
-          fontFamily: "'General Sans',sans-serif", fontWeight: 500,
-          fontSize: 36, letterSpacing: '-0.02em', lineHeight: 1.3,
-        }}>O que nossos parceiros dizem</h2>
-      </div>
+    <section className="section-pad" style={{ padding: '120px 80px' }}>
+      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+        {/* Header */}
+        <div className="reveal" style={{ textAlign: 'center', marginBottom: 72 }}>
+          <SectionLabel>Resultados</SectionLabel>
+          <h2 style={{
+            fontFamily: "'General Sans', sans-serif", fontWeight: 500,
+            fontSize: 40, lineHeight: 1.22, letterSpacing: '-0.022em',
+            maxWidth: 560, margin: '0 auto 16px',
+          }}>
+            Diagnósticos reais.{' '}
+            <span style={{ color: 'rgba(245,245,245,0.45)' }}>
+              Resultados que aparecem no caixa.
+            </span>
+          </h2>
+        </div>
 
-      <div className="testi-grid" style={{
-        display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 16, marginBottom: 120,
-      }}>
-        {testimonials.map((t, i) => (
-          <div key={i} className={`glass-card reveal reveal-delay-${i + 1}`} style={{ padding: 36 }}>
-            <div style={{
-              fontFamily: "'General Sans',sans-serif", fontSize: 52, lineHeight: 1,
-              color: 'rgba(245,245,245,0.07)', marginBottom: 6, fontWeight: 700, userSelect: 'none',
-            }}>"</div>
-            <p style={{
-              fontSize: 15, lineHeight: 1.82, color: 'rgba(245,245,245,0.76)',
-              marginBottom: 32, fontWeight: 300,
-            }}>
-              {t.quote}
-            </p>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        {/* Diagnostic window */}
+        <div className="reveal reveal-delay-1" style={{ marginBottom: 72 }}>
+          <DiagnosticWindow />
+        </div>
+
+        {/* Testimonials preamble */}
+        <div className="reveal" style={{ textAlign: 'center', marginBottom: 32 }}>
+          <p style={{ fontSize: 13, fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase',
+            color: 'rgba(245,245,245,0.35)' }}>
+            Não pedimos para nossos parceiros falar sobre o serviço.<br/>
+            Pedimos para falar sobre o resultado.
+          </p>
+        </div>
+
+        {/* Testimonials */}
+        <div className="testi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 16 }}>
+          {testimonials.map((t, i) => (
+            <div key={i} className={`glass-card reveal reveal-delay-${i + 1}`} style={{ padding: 36 }}>
               <div style={{
-                width: 40, height: 40, borderRadius: '50%',
-                background: 'rgba(245,245,245,0.08)', border: '1px solid rgba(245,245,245,0.12)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 12, fontWeight: 600, color: 'rgba(245,245,245,0.62)',
-              }}>{t.initials}</div>
-              <div>
-                <div style={{ fontSize: 14, fontWeight: 500 }}>{t.name}</div>
-                <div style={{ fontSize: 13, color: 'rgba(245,245,245,0.40)' }}>{t.role}</div>
+                fontFamily: "'General Sans',sans-serif", fontSize: 52, lineHeight: 1,
+                color: 'rgba(245,245,245,0.07)', marginBottom: 6, fontWeight: 700, userSelect: 'none',
+              }}>"</div>
+              <p style={{ fontSize: 15, lineHeight: 1.82, color: 'rgba(245,245,245,0.76)',
+                marginBottom: 32, fontWeight: 300 }}>
+                {t.quote}
+              </p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{
+                  width: 40, height: 40, borderRadius: '50%',
+                  background: 'rgba(245,245,245,0.08)', border: '1px solid rgba(245,245,245,0.12)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 12, fontWeight: 600, color: 'rgba(245,245,245,0.62)',
+                }}>{t.initials}</div>
+                <div>
+                  <div style={{ fontSize: 14, fontWeight: 500 }}>{t.name}</div>
+                  <div style={{ fontSize: 13, color: 'rgba(245,245,245,0.40)' }}>{t.role}</div>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Bottom CTA */}
-      <div style={{ position: 'relative', textAlign: 'center' }}>
-        <div style={{
-          position: 'absolute', top: '50%', left: '50%',
-          transform: 'translate(-50%,-50%)',
-          width: 900, height: 550,
-          background: 'rgba(245,245,245,0.035)',
-          borderRadius: '50%', filter: 'blur(110px)', pointerEvents: 'none',
-        }} />
-        <div style={{
-          position: 'absolute', top: '50%', left: '50%',
-          transform: 'translate(-50%,-50%)',
-          width: 500, height: 300,
-          background: 'rgba(245,245,245,0.028)',
-          borderRadius: '50%', filter: 'blur(55px)', pointerEvents: 'none',
-        }} />
-        <div className="reveal" style={{ position: 'relative' }}>
-          <h2 style={{
-            fontFamily: "'General Sans',sans-serif", fontWeight: 500,
-            fontSize: 52, lineHeight: 1.2, letterSpacing: '-0.025em',
-            maxWidth: 700, margin: '0 auto 20px',
-          }}>
-            Pronto para dar o xeque-mate na estagnação?
-          </h2>
-          <p style={{ fontSize: 16, color: 'rgba(245,245,245,0.56)', maxWidth: 440,
-            margin: '0 auto 44px', lineHeight: 1.7 }}>
-            Agende seu diagnóstico gratuito e descubra exatamente o que está travando seu lucro.
-          </p>
-          <button className="btn-primary" style={{ fontSize: 16, padding: '20px 52px' }}>
-            Agendar Diagnóstico Gratuito
-          </button>
+          ))}
         </div>
       </div>
     </section>
@@ -793,19 +845,164 @@ function Testimonials() {
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   FOOTER
+   8. POR QUE A CHECKMATE É DIFERENTE
+═══════════════════════════════════════════════════════════════════ */
+function Diferencial() {
+  const rows = [
+    {
+      attribute: 'Diagnóstico',
+      agencia: 'Vende pacote',
+      consultoria: 'Faz diagnóstico',
+      checkmate: 'Diagnóstico gratuito e profundo',
+    },
+    {
+      attribute: 'Execução',
+      agencia: 'Executa (um serviço)',
+      consultoria: 'Só aponta o caminho',
+      checkmate: 'Executa tudo junto',
+    },
+    {
+      attribute: 'Visão integrada',
+      agencia: 'Foco no próprio serviço',
+      consultoria: 'Às vezes',
+      checkmate: 'Marketing + Atendimento + Operação',
+    },
+    {
+      attribute: 'Foco em resultado',
+      agencia: 'ROI positivo',
+      consultoria: 'Recomendações',
+      checkmate: 'Lucro líquido real',
+    },
+    {
+      attribute: 'Relação',
+      agencia: 'Fornecedor',
+      consultoria: 'Consultor',
+      checkmate: 'Parceiro de crescimento',
+    },
+  ]
+
+  return (
+    <section className="chess-pattern section-pad" style={{ padding: '120px 80px', position: 'relative' }}>
+      <div style={{
+        position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
+        width: 800, height: 600, background: 'rgba(245,245,245,0.018)',
+        borderRadius: '50%', filter: 'blur(130px)', pointerEvents: 'none',
+      }} />
+
+      <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative' }}>
+        <div className="reveal" style={{ textAlign: 'center', marginBottom: 64 }}>
+          <SectionLabel>Por que somos diferentes</SectionLabel>
+          <h2 style={{
+            fontFamily: "'General Sans', sans-serif", fontWeight: 500,
+            fontSize: 40, lineHeight: 1.22, letterSpacing: '-0.022em',
+            maxWidth: 660, margin: '0 auto',
+          }}>
+            Não somos agência.{' '}
+            Não somos consultoria de slide.{' '}
+            <span style={{ color: 'rgba(245,245,245,0.45)' }}>
+              Somos o parceiro que fica até funcionar.
+            </span>
+          </h2>
+        </div>
+
+        {/* Table */}
+        <div className="reveal reveal-delay-1 glass-card" style={{ padding: '8px 8px', overflow: 'auto' }}>
+          <table className="compare-table">
+            <thead>
+              <tr>
+                <th style={{ width: '18%' }}> </th>
+                <th className="hide-mobile" style={{ width: '27%' }}>Agência tradicional</th>
+                <th className="hide-mobile" style={{ width: '27%' }}>Consultoria comum</th>
+                <th style={{ width: '28%', color: 'rgba(245,245,245,0.72)' }}>Checkmate</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, i) => (
+                <tr key={i}>
+                  <td style={{ fontWeight: 600, fontSize: 13, color: 'rgba(245,245,245,0.45)' }}>
+                    {row.attribute}
+                  </td>
+                  <td className="hide-mobile">{row.agencia}</td>
+                  <td className="hide-mobile">{row.consultoria}</td>
+                  <td className="highlight">{row.checkmate}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   9. CTA FINAL
+═══════════════════════════════════════════════════════════════════ */
+function CTAFinal() {
+  return (
+    <section className="section-pad" style={{ padding: '140px 80px', position: 'relative', textAlign: 'center' }}>
+      {/* Radial glow layers */}
+      {[
+        { w: 900, h: 550, blur: 110, o: 0.034 },
+        { w: 500, h: 300, blur: 55,  o: 0.028 },
+      ].map((g, i) => (
+        <div key={i} style={{
+          position: 'absolute', top: '50%', left: '50%',
+          transform: 'translate(-50%,-50%)',
+          width: g.w, height: g.h,
+          background: `rgba(245,245,245,${g.o})`,
+          borderRadius: '50%', filter: `blur(${g.blur}px)`, pointerEvents: 'none',
+        }} />
+      ))}
+
+      <div className="reveal" style={{ position: 'relative' }}>
+        <h2 style={{
+          fontFamily: "'General Sans', sans-serif", fontWeight: 500,
+          fontSize: 52, lineHeight: 1.2, letterSpacing: '-0.025em',
+          maxWidth: 720, margin: '0 auto 20px',
+        }}>
+          Pronto para dar o xeque-mate na estagnação?
+        </h2>
+        <p style={{ fontSize: 18, color: 'rgba(245,245,245,0.65)', maxWidth: 520,
+          margin: '0 auto 16px', lineHeight: 1.72, fontWeight: 400 }}>
+          O diagnóstico é gratuito. O que você vai descobrir sobre o seu negócio — não tem preço.
+        </p>
+        <p style={{ fontSize: 15, color: 'rgba(245,245,245,0.42)', maxWidth: 480,
+          margin: '0 auto 48px', lineHeight: 1.72 }}>
+          Em uma sessão, a gente mapeia o que está travando seu crescimento e te mostra um caminho claro para o lucro. Sem compromisso. Sem pitch de venda disfarçado de diagnóstico.
+        </p>
+        <button className="btn-primary" style={{ fontSize: 16, padding: '20px 52px', marginBottom: 24 }}>
+          Agendar Diagnóstico Gratuito
+        </button>
+        <div>
+          <p style={{ fontSize: 13, color: 'rgba(245,245,245,0.30)', letterSpacing: '0.04em' }}>
+            Poucos clientes por vez. Foco total. Resultado real.
+          </p>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   10. FOOTER
 ═══════════════════════════════════════════════════════════════════ */
 function Footer() {
   return (
     <footer className="chess-pattern section-pad" style={{
       borderTop: '1px solid rgba(245,245,245,0.10)',
-      padding: '32px 80px',
+      padding: '36px 80px',
     }}>
       <div className="footer-inner" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <span style={{
-          fontFamily: "'General Sans',sans-serif", fontWeight: 600,
-          fontSize: 13, letterSpacing: '0.18em', color: 'rgba(245,245,245,0.80)',
-        }}>CHECKMATE</span>
+        <div>
+          <span style={{
+            fontFamily: "'General Sans',sans-serif", fontWeight: 600,
+            fontSize: 13, letterSpacing: '0.18em', color: 'rgba(245,245,245,0.80)',
+            display: 'block', marginBottom: 4,
+          }}>CHECKMATE</span>
+          <span style={{ fontSize: 12, color: 'rgba(245,245,245,0.30)', fontStyle: 'italic',
+            fontFamily: "'Inter',sans-serif" }}>Consultoria que executa.</span>
+        </div>
 
         <div style={{ display: 'flex', gap: 28 }}>
           {['Privacidade', 'Termos', 'Instagram', 'WhatsApp'].map((l) => (
@@ -839,10 +1036,12 @@ export default function App() {
       <main>
         <Hero />
         <Ticker />
-        <Features />
-        <Metrics />
-        <Approach />
-        <Testimonials />
+        <OProblema />
+        <ComoEntramos />
+        <OQueConstruimos />
+        <Resultados />
+        <Diferencial />
+        <CTAFinal />
       </main>
       <Footer />
     </>
