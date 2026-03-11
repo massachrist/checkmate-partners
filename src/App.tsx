@@ -250,11 +250,11 @@ function Navbar() {
       WebkitBackdropFilter: scrolled ? 'blur(24px) saturate(1.5)' : 'none',
       borderBottom: scrolled ? '1px solid rgba(245,245,245,0.07)' : '1px solid transparent',
     }}>
-      <span style={{
-        fontFamily: "'General Sans', sans-serif", fontWeight: 600,
-        fontSize: 15, letterSpacing: '0.18em', color: '#f5f5f5', userSelect: 'none',
-        flexShrink: 0,
-      }}>CHECKMATE</span>
+      <img
+  src="/images/logo_white.png"
+  alt="Checkmate Partners"
+  style={{ height: 28, width: 'auto', objectFit: 'contain' }}
+/>
 
       <div className="nav-links" style={{ display: 'flex', gap: 28 }}>
         {['O Problema', 'Como Entramos', 'O Que Construímos', 'Resultados'].map((l) => (
@@ -995,11 +995,11 @@ function Footer() {
     }}>
       <div className="footer-inner" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <span style={{
-            fontFamily: "'General Sans',sans-serif", fontWeight: 600,
-            fontSize: 13, letterSpacing: '0.18em', color: 'rgba(245,245,245,0.80)',
-            display: 'block', marginBottom: 4,
-          }}>CHECKMATE</span>
+          <img
+  src="/images/logo_white.png"
+  alt="Checkmate Partners"
+  style={{ height: 22, width: 'auto', objectFit: 'contain', opacity: 0.80, marginBottom: 4 }}
+/>
           <span style={{ fontSize: 12, color: 'rgba(245,245,245,0.30)', fontStyle: 'italic',
             fontFamily: "'Inter',sans-serif" }}>Consultoria que executa.</span>
         </div>
