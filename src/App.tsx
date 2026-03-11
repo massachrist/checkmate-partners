@@ -302,7 +302,7 @@ function Hero() {
         objectFit: 'cover', objectPosition: 'center center',
         transition: 'opacity 1.2s ease', opacity: videoReady ? 1 : 0,
       }}>
-        <source src="/videos/hero-bg.mp4" type="video/mp4" />
+        <source src="/videos/black_hole.mp4" type="video/mp4" />
       </video>
 
       <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.50)', zIndex: 2 }} />
