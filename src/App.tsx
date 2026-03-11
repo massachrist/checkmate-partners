@@ -251,7 +251,7 @@ function Navbar() {
       borderBottom: scrolled ? '1px solid rgba(245,245,245,0.07)' : '1px solid transparent',
     }}>
       <img
-  src="/images/logo_white.png"
+  src="/logo_white.png"
   alt="Checkmate Partners"
   style={{ height: 28, width: 'auto', objectFit: 'contain' }}
 />
@@ -996,7 +996,7 @@ function Footer() {
       <div className="footer-inner" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
           <img
-  src="/images/logo_white.png"
+  src="/logo_white.png"
   alt="Checkmate Partners"
   style={{ height: 22, width: 'auto', objectFit: 'contain', opacity: 0.80, marginBottom: 4 }}
 />
